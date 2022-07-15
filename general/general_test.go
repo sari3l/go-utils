@@ -11,6 +11,8 @@ type test struct {
 	Node3 []int
 }
 
+var test1 = test{node2: 3}
+
 func TestKeys(t *testing.T) {
 	type args struct {
 		T any
@@ -91,6 +93,38 @@ func TestGet(t *testing.T) {
 			got := Get(tt.args.src, tt.args.dst, tt.args.defaultValue)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Get() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestValues(t *testing.T) {
+	type args struct {
+		src any
+	}
+	tests := []struct {
+		name string
+		args args
+		want []any
+	}{
+		{
+			args: args{
+				src: map[int]string{1: "1", 2: "2", 3: "3"},
+			},
+			want: []any{"1", "2", "3"},
+		},
+		{
+			args: args{
+				src: test1,
+			},
+			want: []any{test1.Node1, test1.Node3},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Values(tt.args.src)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Values() = %v, want %v", got, tt.want)
 			}
 		})
 	}
